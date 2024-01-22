@@ -1,60 +1,36 @@
-import { MantineProvider, AppShell, Modal, Button, Textarea } from '@mantine/core'
+import { MantineProvider, AppShell, Modal } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 
 import { ChatControls } from './chat-controls'
 import { ChatContacts } from './chat-contacts'
 import { ChatDiscussions } from './chat-discussions'
-import { ChatInput } from './chat-input'
-import { ChatMessages } from './chat-messages'
 
 import { theme } from '../theme'
 import '@mantine/core/styles.css'
+import { ChatMessages } from './chat-messages'
 
 export function ChatApp() {
-  const [modalIsVisible, { open: openModal, close: closeModal }] = useDisclosure(false)
+  const [contactsAreVisible, { open: showContacts, close: hideContacts }] = useDisclosure(false)
 
   return (
     <MantineProvider theme={theme}>
-      <AppShell
-        header={{ height: 60 }}
-        navbar={{
-          width: 300,
-        }}
-        padding="md">
-        <AppShell.Header>
-          <ChatControls />
+      <AppShell header={{ height: 70 }} navbar={{ width: 300 }} padding="lg">
+        <AppShell.Header className="flex items-center">
+          <ChatControls showContacts={showContacts} />
         </AppShell.Header>
 
-        <AppShell.Navbar p="md">
+        <AppShell.Navbar className="p-4">
           <ChatDiscussions />
         </AppShell.Navbar>
 
         <AppShell.Main>
-          <p>Hello</p>
-
-          <Button variant="outline" onClick={() => openModal()}>
-            Open modal
-          </Button>
-
-          <Modal opened={modalIsVisible} onClose={closeModal} title="Authentication">
-            Lista cu persoane o sa vina in interior
+          <Modal size={700} opened={contactsAreVisible} onClose={hideContacts}>
+            <ChatContacts />
           </Modal>
 
-          <Textarea
-            label="Input label"
-            description="Input description"
-            placeholder="Input placeholder"
-          />
+          <ChatMessages />
         </AppShell.Main>
       </AppShell>
-
-      <div className="text-red-900">
-        <ChatControls />
-        <ChatContacts />
-        <ChatDiscussions />
-        <ChatInput />
-        <ChatMessages />
-      </div>
     </MantineProvider>
   )
 }
