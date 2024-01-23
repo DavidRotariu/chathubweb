@@ -1,16 +1,33 @@
 import { useEffect, useState } from 'react'
 import { Button, Table } from '@mantine/core'
 
-const API = 'http://localhost:8000/api'
+const MY_ID = '0d763ac3-b792-4ec5-beb5-f6c77f59890c'
 
-const CONTACTS_ENDPOINT = '/contacts'
+const BASE_URL = 'http://localhost:8000/api'
+const CONTACTS_ENDPOINT = `${BASE_URL}/contacts`
+const DISCUSSIONS_ENDPOINT = `${BASE_URL}/discussions`
 
 async function fetchContacts() {
-    const response = await window.fetch(`${API}${CONTACTS_ENDPOINT}`)
+    const response = await window.fetch(CONTACTS_ENDPOINT)
     const data = await response.json()
 
     return data
 }
+
+async function postDiscussion(id_list) {
+    const body = {
+      contacts: [...id_list, MY_ID]
+    }
+  
+    const response = await window.fetch(DISCUSSIONS_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    })
+    const data = await response.json()
+  
+    return data
+  }
 
 export function ChatContacts() {
     const [contacts, setContacts] = useState([])
@@ -19,7 +36,7 @@ export function ChatContacts() {
 
     async function loadContacts() {
         const data = await fetchContacts()
-        setContacts(data)
+        setContacts(data.filter(contact => contact.id != MY_ID))
     }
 
     useEffect(() => {
@@ -44,8 +61,9 @@ export function ChatContacts() {
 
     return (
         <div>
-            <h2>Contacts</h2>
-
+            <Button variant="outline" color="blue" size="md" onClick={() => postDiscussion(selectedContacts)}>
+                New chat with: {selectedContactNames.join(', ')}
+            </Button>
             <Table verticalSpacing="md">
                 <Table.Thead>
                     <Table.Tr>
@@ -54,9 +72,9 @@ export function ChatContacts() {
                         <Table.Th />
                     </Table.Tr>
                 </Table.Thead>
-
                 <Table.Tbody>
-                    {contacts.map((contact) => (
+                    {
+                        contacts.map((contact) => (
                         <Table.Tr key={contact.id}>
                             <Table.Td> {contact.name}</Table.Td>
                             <Table.Td>
@@ -71,9 +89,7 @@ export function ChatContacts() {
                 </Table.Tbody>
             </Table>
 
-            <Button variant="outline" color="blue" size="md" className="my-1">
-                New chat with: {selectedContactNames.join(', ')}
-            </Button>
+
         </div>
     )
 }

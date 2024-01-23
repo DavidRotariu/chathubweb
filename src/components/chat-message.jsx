@@ -14,7 +14,7 @@ export function ChatMessage({ value, userName, isMe }) {
             ) : (
                 <div class="flex items-end mb-4">
                     <div class="flex items-end">
-                        <Avatar color="white" size="md" className="mr-3">
+                        <Avatar size="md" radius="xl" style={{ fontSize: 20, marginRight: '10px' }}>
                             {userName.charAt(0).toUpperCase()}
                         </Avatar>
                         <div class="bg-green-500 font-sans text-white px-3 py-1 rounded-xl max-w-xs">

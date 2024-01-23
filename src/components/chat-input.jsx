@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import { Button } from '@mantine/core'
 
-const API =
-  'https://chat-app-dualusv.azurewebsites.net/api/discussions/921772a4-b673-479f-8586-b2bffd3348b3/messages'
+const MY_ID = '0d763ac3-b792-4ec5-beb5-f6c77f59890c'
+const API = 'http://localhost:8000/api/messages'
 
-async function postMessage(message) {
+async function postMessage(selectedDiscussion, message) {
   const body = {
-    discussion_id: '921772a4-b673-479f-8586-b2bffd3348b3',
-    user_id: '19b22709-8dcc-4a7c-ba65-e6eeecfa5162',
+    discussion_id: selectedDiscussion,
+    user_id: MY_ID,
     value: message,
   }
 
@@ -21,7 +21,7 @@ async function postMessage(message) {
   return data
 }
 
-export function ChatInput() {
+export function ChatInput( {selectedDiscussion} ) {
   const [value, setValue] = useState('')
 
   return (
@@ -35,8 +35,8 @@ export function ChatInput() {
         variant="outline"
         color="blue"
         className="block h-full w-40 p-4"
-        onClick={() => postMessage(value)}>
-        Send message
+        onClick={() => postMessage(selectedDiscussion, value)}>
+        Send message 
       </Button>
     </div>
   )

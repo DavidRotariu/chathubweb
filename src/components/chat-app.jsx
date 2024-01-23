@@ -12,7 +12,7 @@ import { ChatMessages } from './chat-messages'
 
 export function ChatApp() {
     const [contactsAreVisible, { open: showContacts, close: hideContacts }] = useDisclosure(false)
-    const [selectedDiscussion, selectDiscussion] = useState('de2c58ea-1bee-4691-a5ea-718531452834')
+    const [selectedDiscussion, selectDiscussion] = useState('')
 
     return (
         <MantineProvider theme={theme}>

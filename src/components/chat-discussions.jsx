@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Avatar, Card, Title, Text } from '@mantine/core';
 
 const API = 'http://localhost:8000/api'
-const MY_ID = 'b642cbfc-e314-425a-a80c-0916e0bcaa69'
+const MY_ID = '0d763ac3-b792-4ec5-beb5-f6c77f59890c'
 const DISCUSSIONS_ENDPOINT = '/discussions/?user_id='
 
 
