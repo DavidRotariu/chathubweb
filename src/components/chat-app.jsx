@@ -10,10 +10,12 @@ import { theme } from '../theme'
 import '@mantine/core/styles.css'
 import { ChatMessages } from './chat-messages'
 
+
 export function ChatApp() {
     const [contactsAreVisible, { open: showContacts, close: hideContacts }] = useDisclosure(false)
     const [selectedDiscussion, selectDiscussion] = useState('')
 
+    
     return (
         <MantineProvider theme={theme}>
             <AppShell header={{ height: 70 }} navbar={{ width: 300 }} padding="lg">

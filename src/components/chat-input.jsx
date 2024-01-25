@@ -4,7 +4,7 @@ import { Button } from '@mantine/core'
 const MY_ID = '0d763ac3-b792-4ec5-beb5-f6c77f59890c'
 const API = 'http://localhost:8000/api/messages'
 
-async function postMessage(selectedDiscussion, message) {
+async function postMessage(selectedDiscussion, message, loadMessages) {
   const body = {
     discussion_id: selectedDiscussion,
     user_id: MY_ID,
@@ -18,10 +18,12 @@ async function postMessage(selectedDiscussion, message) {
   })
   const data = await response.json()
 
+  loadMessages();
+
   return data
 }
 
-export function ChatInput( {selectedDiscussion} ) {
+export function ChatInput( {selectedDiscussion, loadMessages} ) {
   const [value, setValue] = useState('')
 
   return (
@@ -35,7 +37,7 @@ export function ChatInput( {selectedDiscussion} ) {
         variant="outline"
         color="blue"
         className="block h-full w-40 p-4"
-        onClick={() => postMessage(selectedDiscussion, value)}>
+        onClick={() => postMessage(selectedDiscussion, value, loadMessages)}>
         Send message 
       </Button>
     </div>

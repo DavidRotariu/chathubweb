@@ -52,7 +52,8 @@ export function ChatMessages({ selectedDiscussion }) {
                                     </div>
                                 ))}
                             </div>
-                            <ChatInput selectedDiscussion={selectedDiscussion} />
+                            <ChatInput selectedDiscussion={selectedDiscussion} loadMessages={loadMessages}/>
+
                         </div>) : (
                         <div className="mx-auto h-[80vh] grid place-items-center">
                             <p>Please select a chat</p>
