@@ -1,24 +1,47 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { ChatMessage } from './chat-message'
 import { ChatInput } from './chat-input'
+import { MESSAGES_ENDPOINT, WEBSOCKET_URL, MY_ID } from './urls'
 
-const MY_ID = '0d763ac3-b792-4ec5-beb5-f6c77f59890c'
 
 async function fetchMessages(DISCUSSIONS_ID) {
-    const API = `http://localhost:8000/api/messages/?user_id=${MY_ID}&discussion_id=${DISCUSSIONS_ID}`
-
+    if(DISCUSSIONS_ID == '') return 'error'
+    const API = `${MESSAGES_ENDPOINT}/?user_id=${MY_ID}&discussion_id=${DISCUSSIONS_ID}`
     const response = await window.fetch(API)
     const data = await response.json()
     return data
 }
 
-export function ChatMessages({ selectedDiscussion }) {
+export function ChatMessages({ selectedDiscussion, loadDiscussions }) {
     const [messages, setMessages] = useState([])
     const [selectedSomething, selectSomething] = useState(false)
+    const [socket, setSocket] = useState(null);
+    const messageContainerRef = useRef(null);
+
+    const handleWebSocketMessage = () => {
+        loadDiscussions();
+        loadMessages();
+    };
+
+    useEffect(() => {
+        const newSocket = new WebSocket(WEBSOCKET_URL);
+        newSocket.onopen = () => {
+            //console.log('WebSocket connection opened at chat-messages');
+        };
+        newSocket.onmessage = handleWebSocketMessage;
+        newSocket.onclose = () => {
+            //console.log('WebSocket connection closed at chat-messages');
+        };
+        setSocket(newSocket);
+        return () => {
+            newSocket.close();
+        };
+    }, []);
+
 
     async function loadMessages() {
         const data = await fetchMessages(selectedDiscussion)
-        if (data.detail == 'Discussion not found.')
+        if (data.detail == 'Discussion not found.' || data == 'error')
             selectSomething(false)
         else {
             setMessages(data)
@@ -30,7 +53,11 @@ export function ChatMessages({ selectedDiscussion }) {
         loadMessages()
     }, [selectedDiscussion])
 
-
+    useEffect(() => {
+        if (messageContainerRef.current) {
+            messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
+        }
+    }, [messages]);
     return (
         <div>
             {
@@ -38,7 +65,7 @@ export function ChatMessages({ selectedDiscussion }) {
                     (
                         <div className="mx-auto max-w-screen-lg" >
 
-                            <div className="mb-4 flex flex-col overflow-auto border-2 p-8 h-[70vh]">
+                            <div className="mb-4 flex flex-col overflow-auto border-2 p-8 h-[70vh]" ref={messageContainerRef}>
                                 {messages.map((message) => (
                                     <div
                                         className={`mb-1 ${message.user_id === MY_ID ? 'self-end' : 'self-start'}`}
@@ -52,7 +79,7 @@ export function ChatMessages({ selectedDiscussion }) {
                                     </div>
                                 ))}
                             </div>
-                            <ChatInput selectedDiscussion={selectedDiscussion} loadMessages={loadMessages}/>
+                            <ChatInput selectedDiscussion={selectedDiscussion} loadMessages={loadMessages} loadDiscussions={loadDiscussions} />
 
                         </div>) : (
                         <div className="mx-auto h-[80vh] grid place-items-center">
