@@ -1,10 +1,27 @@
-import { Button, Group, Switch } from '@mantine/core'
+import { Button, Group, Switch, Title } from '@mantine/core'
 
-export function ChatControls({ showContacts }) {
+export function ChatControls({ showContacts, showLogin, MY_NAME }) {
     return (
-        <Group>
-            <div className="flex mx-6">
-                <div>
+        <Group className="flex items-center justify-between w-screen">
+            <div className="flex items-center w-[30vh]">
+                <div className="ml-[15px]">
+                    <Button
+                        variant="outline"
+                        size="md"
+                        onClick={() => {
+                            showLogin(true)
+                        }}>
+                        Login
+                        <div className="ml-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+                                <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+                            </svg>
+                        </div>
+                    </Button>
+                </div>
+                <div className="ml-[15px]">
                     <Button
                         variant="outline"
                         size="md"
@@ -34,13 +51,18 @@ export function ChatControls({ showContacts }) {
                         </div>
                     </Button>
                 </div>
-                <div className="flex items-end mx-5">
-                    <Switch
-                        defaultChecked
-                        size="md"
-                        color="gray"
-                    />
-                </div>
+            </div>
+
+            <div>
+                <Title order={2}>{MY_NAME ? `Hello, ${MY_NAME}` : 'Please log in...'}</Title>
+            </div>
+
+            <div className="flex items-center justify-end mr-[15px] w-[30vh]">
+                <Switch
+                    defaultChecked
+                    size="md"
+                    color="gray"
+                />
             </div>
         </Group>
     )

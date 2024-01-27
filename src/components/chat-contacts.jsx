@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Button, Table } from '@mantine/core'
-import { CONTACTS_ENDPOINT, DISCUSSIONS_ENDPOINT, MY_ID } from './urls'
+import { CONTACTS_ENDPOINT, DISCUSSIONS_ENDPOINT } from './urls'
 
 async function fetchContacts() {
     const response = await window.fetch(CONTACTS_ENDPOINT)
@@ -9,7 +9,7 @@ async function fetchContacts() {
     return data
 }
 
-async function postDiscussion(id_list, selectDiscussion) {
+async function postDiscussion(id_list, MY_ID, selectDiscussion) {
     const body = {
       contacts: [...id_list, MY_ID]
     }
@@ -28,7 +28,7 @@ async function postDiscussion(id_list, selectDiscussion) {
     return data
   }
 
-export function ChatContacts({selectDiscussion}) {
+export function ChatContacts({selectDiscussion, hideContacts, MY_ID}) {
     const [contacts, setContacts] = useState([])
     const [selectedContacts, selectContacts] = useState([])
     const [selectedContactNames, selectContactNames] = useState([])
@@ -58,9 +58,14 @@ export function ChatContacts({selectDiscussion}) {
         selectContactNames(newSelectedContactNames)
     }
 
+    function createDiscussion() {
+        hideContacts(true);
+        postDiscussion(selectedContacts, MY_ID, selectDiscussion);
+    }
+
     return (
         <div>
-            <Button variant="outline" color="blue" size="md" onClick={() => postDiscussion(selectedContacts, selectDiscussion)}>
+            <Button variant="outline" color="blue" size="md" onClick={createDiscussion}>
                 New chat with: {selectedContactNames.join(', ')}
             </Button>
             <Table verticalSpacing="md">
@@ -87,8 +92,6 @@ export function ChatContacts({selectDiscussion}) {
                     ))}
                 </Table.Tbody>
             </Table>
-
-
         </div>
     )
 }

@@ -1,10 +1,10 @@
 import { useEffect, useState, useRef } from 'react'
 import { ChatMessage } from './chat-message'
 import { ChatInput } from './chat-input'
-import { MESSAGES_ENDPOINT, WEBSOCKET_URL, MY_ID } from './urls'
+import { MESSAGES_ENDPOINT, WEBSOCKET_URL } from './urls'
 
 
-async function fetchMessages(DISCUSSIONS_ID) {
+async function fetchMessages(MY_ID, DISCUSSIONS_ID) {
     if(DISCUSSIONS_ID == '') return 'error'
     const API = `${MESSAGES_ENDPOINT}/?user_id=${MY_ID}&discussion_id=${DISCUSSIONS_ID}`
     const response = await window.fetch(API)
@@ -12,7 +12,7 @@ async function fetchMessages(DISCUSSIONS_ID) {
     return data
 }
 
-export function ChatMessages({ selectedDiscussion, loadDiscussions }) {
+export function ChatMessages({ selectedDiscussion, loadDiscussions, MY_ID }) {
     const [messages, setMessages] = useState([])
     const [selectedSomething, selectSomething] = useState(false)
     const [socket, setSocket] = useState(null);
@@ -40,7 +40,7 @@ export function ChatMessages({ selectedDiscussion, loadDiscussions }) {
 
 
     async function loadMessages() {
-        const data = await fetchMessages(selectedDiscussion)
+        const data = await fetchMessages(MY_ID, selectedDiscussion)
         if (data.detail == 'Discussion not found.' || data == 'error')
             selectSomething(false)
         else {
@@ -79,7 +79,7 @@ export function ChatMessages({ selectedDiscussion, loadDiscussions }) {
                                     </div>
                                 ))}
                             </div>
-                            <ChatInput selectedDiscussion={selectedDiscussion} loadMessages={loadMessages} loadDiscussions={loadDiscussions} />
+                            <ChatInput selectedDiscussion={selectedDiscussion} loadMessages={loadMessages} loadDiscussions={loadDiscussions} MY_ID={MY_ID}/>
 
                         </div>) : (
                         <div className="mx-auto h-[80vh] grid place-items-center">

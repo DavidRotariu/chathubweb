@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import { Button } from '@mantine/core'
-import { MESSAGES_ENDPOINT, WEBSOCKET_URL, MY_ID } from './urls'
+import { MESSAGES_ENDPOINT, WEBSOCKET_URL } from './urls'
 
-async function postMessage(selectedDiscussion, message) {
+async function postMessage(MY_ID, selectedDiscussion, message) {
     const body = {
         discussion_id: selectedDiscussion,
         user_id: MY_ID,
@@ -20,7 +20,7 @@ async function postMessage(selectedDiscussion, message) {
 }
 
 
-export function ChatInput({ selectedDiscussion, loadMessages,  loadDiscussions }) {
+export function ChatInput({ selectedDiscussion, loadMessages,  loadDiscussions, MY_ID }) {
     const [value, setValue] = useState('')
     const [socket, setSocket] = useState(null);
 
@@ -52,7 +52,7 @@ export function ChatInput({ selectedDiscussion, loadMessages,  loadDiscussions }
         if (socket && value.trim() !== '') {
             const trimmedValue = value.trim();
             socket.send(trimmedValue);
-            postMessage(selectedDiscussion, trimmedValue);
+            postMessage(MY_ID, selectedDiscussion, trimmedValue);
             setTimeout(() => {
                 setValue('');
               }, 10);

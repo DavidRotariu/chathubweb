@@ -1,7 +1,4 @@
-import { useEffect, useState } from 'react'
 import { Avatar, Card, Title, Text } from '@mantine/core';
-
-
 
 export function ChatDiscussions({ selectDiscussion, selectedDiscussion, discussions }) {
     return (
@@ -37,7 +34,7 @@ export function ChatDiscussions({ selectDiscussion, selectedDiscussion, discussi
                                 <Title order={3} style={{ marginBottom: '5px', color: '#333333' }}>
                                     {discussion.name}
                                 </Title>
-                                <Text style={{ color: '#666666' }}>{discussion.recent.name}:   {discussion.recent.value}</Text>
+                                <Text style={{ color: '#666666' }}>{discussion.recent.value ? `${discussion.recent.name}: ${discussion.recent.value}` : "No Message"}</Text>
                             </div>
                         </div>
                     </Card>
